@@ -1,0 +1,32 @@
+# Datos (data.db pesa >100MB, supera el límite de GitHub; además no es nuestro para redistribuir)
+data/raw/*
+data/processed/*
+!data/**/.gitkeep
+
+# Salidas generadas
+submissions/*.csv
+reports/*.csv
+reports/*.json
+*.parquet
+*.npz
+*.pkl
+catboost_info/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Kaggle / secretos
+kaggle.json
+.env
+
+# SO / editores
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
