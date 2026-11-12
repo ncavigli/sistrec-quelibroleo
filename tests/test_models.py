@@ -5,7 +5,8 @@ import numpy as np
 import pandas as pd
 import pytest
 
-from sistrec.models import EASE, AttributeAffinity, ItemKNN, Popularity, RP3beta, WeightedHybrid
+from sistrec.models import (EASE, AttributeAffinity, ItemKNN, NewItemAffinity, Popularity, RP3beta,
+                            WeightedHybrid)
 from sistrec.split import temporal_split
 
 
@@ -31,6 +32,7 @@ MODELS = [
     lambda: RP3beta(k_neighbors=10),
     lambda: EASE(l2=10, max_items=30),
     lambda: AttributeAffinity("autor"),
+    lambda: NewItemAffinity(),
     lambda: WeightedHybrid([ItemKNN(k_neighbors=10), AttributeAffinity("autor")], [1.0, 0.5]),
 ]
 

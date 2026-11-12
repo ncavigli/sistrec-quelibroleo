@@ -21,20 +21,26 @@ import pandas as pd
 from ..config import ITEM_COL, K, SEED, USER_COL
 from ..data import new_catalog_items
 from ..metrics import evaluate
-from ..models import ALS, EASE, AttributeAffinity, ItemKNN, Popularity, Recommender
+from ..models import (ALS, EASE, AttributeAffinity, ItemKNN, NewItemAffinity, Popularity,
+                      Recommender)
 from ..split import temporal_split
 from .candidates import candidate_recall, generate_candidates
 from .features import build_features, feature_columns
+
+# Cambiar cuando cambian generadores/features: invalida los folds cacheados.
+CANDIDATES_VERSION = "v2"
+NEW_ITEMS_YEARS_BACK = 3  # novedades = libros sin lecturas editados desde (año corte - 3)
 
 # nombre -> (fábrica, cantidad de candidatos que aporta)
 DEFAULT_GENERATORS: dict[str, tuple[Callable[[], Recommender], int]] = {
     "pop90": (lambda: Popularity(half_life_days=90), 100),
     "pop365": (lambda: Popularity(half_life_days=365), 50),
     "autor": (lambda: AttributeAffinity("autor", gamma=0.5, half_life_days=730), 150),
-    "autor_pure": (lambda: AttributeAffinity("autor", gamma=0.0, half_life_days=730), 50),
+    "autor_pure": (lambda: AttributeAffinity("autor", gamma=0.0, half_life_days=730), 100),
+    "novedades": (lambda: NewItemAffinity(half_life_days=730), 150),
     "genero": (lambda: AttributeAffinity("genero", gamma=1.0, half_life_days=365), 100),
-    "itemknn": (lambda: ItemKNN(k_neighbors=200, shrink=10, half_life_days=730), 100),
-    "ease": (lambda: EASE(l2=500, max_items=8000, half_life_days=730), 100),
+    "itemknn": (lambda: ItemKNN(k_neighbors=200, shrink=10, half_life_days=730), 200),
+    "ease": (lambda: EASE(l2=500, max_items=8000, half_life_days=730), 150),
     "als": (lambda: ALS(factors=128, regularization=0.05, alpha=20, iterations=20), 100),
 }
 
@@ -64,7 +70,7 @@ def build_fold(
         train, gt, users = split.train, split.ground_truth, split.users
     else:  # fold final (sin etiquetas)
         train, gt = df[df["fecha"] < cutoff_ts], {}
-    extra = new_catalog_items(books, train, cutoff_ts.year - 1)
+    extra = new_catalog_items(books, train, cutoff_ts.year - NEW_ITEMS_YEARS_BACK)
 
     fitted = {}
     for name, (factory, _) in generators.items():
@@ -77,6 +83,9 @@ def build_fold(
         pos = {(u, i) for u, items in gt.items() for i in items}
         frame["label"] = [int((u, i) in pos) for u, i in zip(frame[USER_COL], frame[ITEM_COL])]
         rec = candidate_recall(cands, gt)
+        if verbose:  # aporte de cada generador (recall si sólo existiera ése)
+            per = {n: candidate_recall(cands[cands[f"{n}_rank"].notna()], gt) for n in generators}
+            print("   recall por generador: " + "  ".join(f"{n}={r:.3f}" for n, r in per.items()))
     frame = frame.sort_values(USER_COL, kind="stable").reset_index(drop=True)
     if verbose:
         msg = f"[fold {cutoff}] usuarios={len(users)} candidatos={len(frame):,} "

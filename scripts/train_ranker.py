@@ -24,12 +24,13 @@ from sistrec.data import load_books, load_interactions, load_readers, load_targe
 from sistrec.evaluation import log_result
 from sistrec.models import Popularity
 from sistrec.ranking import Fold, TwoStageRanker, build_fold
+from sistrec.ranking.pipeline import CANDIDATES_VERSION
 from sistrec.split import temporal_split
 
 
 def get_fold(df, books, readers, cutoff, end=None, users=None, rebuild=False) -> Fold:
     tag = "final" if users is not None else "labeled"
-    path = DATA_PROCESSED / f"fold_{cutoff}_{tag}.parquet"
+    path = DATA_PROCESSED / f"fold_{cutoff}_{tag}_{CANDIDATES_VERSION}.parquet"
     gt = temporal_split(df, cutoff, end).ground_truth if users is None else {}
     if path.exists() and not rebuild:
         frame = pd.read_parquet(path)

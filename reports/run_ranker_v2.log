@@ -1,0 +1,36 @@
+C:\Users\nicoc\.venvs\recsys-libros\Lib\site-packages\implicit\cpu\als.py:96: RuntimeWarning: OpenBLAS is configured to use 8 threads. It is highly recommended to disable its internal threadpool by setting the environment variable 'OPENBLAS_NUM_THREADS=1' or by calling 'threadpoolctl.threadpool_limits(1, "blas")'. Having OpenBLAS use a threadpool can lead to severe performance issues here.
+  check_blas_config()
+   recall por generador: pop90=0.146  pop365=0.081  autor=0.160  autor_pure=0.108  novedades=0.092  genero=0.137  itemknn=0.210  ease=0.193  als=0.122
+[fold 2022-01-01] usuarios=1267 candidatos=627,453 (~495/usuario) extra_items=5178 recall_candidatos=0.356 positivos=5,600 (127s)
+   recall por generador: pop90=0.126  pop365=0.076  autor=0.159  autor_pure=0.108  novedades=0.088  genero=0.131  itemknn=0.203  ease=0.182  als=0.117
+[fold 2023-01-01] usuarios=1322 candidatos=654,319 (~495/usuario) extra_items=3869 recall_candidatos=0.330 positivos=5,571 (136s)
+   recall por generador: pop90=0.110  pop365=0.067  autor=0.139  autor_pure=0.098  novedades=0.075  genero=0.115  itemknn=0.188  ease=0.167  als=0.099
+[fold 2024-01-01] usuarios=1154 candidatos=619,026 (~536/usuario) extra_items=2573 recall_candidatos=0.339 positivos=4,914 (94s)
+
+VALIDACIÓN 2024-01-01: ndcg@20=0.0814 target=0.1036 recall=0.0968 hit=0.429 best_iter=218
+
+Top features (gain):
+n_generators              0.093
+item_days_since_first     0.064
+ua_autor_rating_rel       0.050
+ease_score                0.035
+autor_cnt_all             0.030
+item_ed_age               0.029
+pop90_score               0.029
+reader_age                0.028
+autor_rank                0.027
+autor_pure_score          0.026
+als_score                 0.024
+ed_year_gap               0.023
+anio_edicion              0.023
+ua_autor_rating           0.022
+user_frac_new_releases    0.022
+item_trend_90_365         0.020
+ease_rank                 0.019
+user_days_since_last      0.019
+autor_score               0.019
+autor_cnt_365d            0.019
+[fold 2025-01-01] usuarios=832 candidatos=524,425 (~630/usuario) extra_items=1395 (141s)
+
+Submission: C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\submissions\20261112_1731_ranker_v2.csv  (546s total)
+EXIT=0

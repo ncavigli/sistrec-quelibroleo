@@ -1,5 +1,5 @@
 from .base import Recommender, interaction_weights
-from .content import AttributeAffinity
+from .content import AttributeAffinity, NewItemAffinity
 from .ease import EASE
 from .hybrid import WeightedHybrid
 from .neighborhood import RP3beta, ItemKNN
@@ -16,5 +16,5 @@ def __getattr__(name):  # ALS/BPR importan `implicit` sólo si se usan
 
 __all__ = [
     "Recommender", "interaction_weights", "Popularity", "ItemKNN", "RP3beta", "EASE",
-    "AttributeAffinity", "WeightedHybrid", "ALS", "BPR",
+    "AttributeAffinity", "NewItemAffinity", "WeightedHybrid", "ALS", "BPR",
 ]

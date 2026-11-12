@@ -66,3 +66,43 @@ autor, edad del lector, rating relativo que le da al autor, popularidad total de
 
 Submission: `v02_ranker_v1.csv` (2.366 libros distintos, 336 recomendaciones son novedades
 sin interacciones previas).
+
+## Leaderboard público de Kaggle
+
+| Submission | Validación (target) | Kaggle público |
+|---|---|---|
+| `v02_ranker_v1.csv` | 0.1077 | **0.11658** |
+
+La validación con los lectores del test (0.108) predice bien el score público (0.117): el
+protocolo temporal está bien calibrado y los supuestos (relevancia binaria, test = 2025, excluir
+ya leídos) son correctos.
+
+## v2 – Candidatos ampliados + generador de novedades
+
+Diagnóstico de los relevantes de 2024 que *no* estaban entre los candidatos v1:
+
+| Tipo de libro relevante | % | Recall candidatos v1 |
+|---|---|---|
+| Existía en el historial | 78% | 33.5% |
+| Novedad del catálogo (ed. ≥ año-1, sin lecturas) | 14% | 8.2% |
+| Novedad más vieja (no incluida) | 8% | 0% |
+
+Cambios: generador `NewItemAffinity` (sólo puntúa libros sin lecturas, por afinidad de
+autor/género/editorial + popularidad reciente del autor), ventana de novedades a 3 años, más
+cupo para ItemKNN (200), EASE (150) y autor puro (100).
+
+Recall de candidatos 2024: 0.273 → **0.339**, pero NDCG@20 no mejora (0.0827 → 0.0814).
+
+### Comparación controlada (3 semillas, `scripts/tune_ranker.py`)
+
+| Candidatos | base | small_leaves | lr05_l15 | deep_reg |
+|---|---|---|---|---|
+| v1 | 0.0833 | 0.0833 | 0.0839 | **0.0840** |
+| v2 | 0.0831 | 0.0828 | 0.0830 | 0.0836 |
+
+Desvío entre semillas ≈ 0.0005–0.001; error estándar por muestreo de lectores ≈ 0.004.
+**Meseta en ~0.083–0.084**: ni más candidatos ni tuning mueven la métrica. Los relevantes que
+agregó v2 son "difíciles" (entran como candidatos pero el ranker no tiene información para
+subirlos). Las próximas mejoras tienen que aportar señal nueva (secuencias/sagas, más folds).
+
+Submission `v03_ranker_v2.csv` generada; no vale la pena gastar un envío: es equivalente a v02.
