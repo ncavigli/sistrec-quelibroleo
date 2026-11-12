@@ -149,8 +149,14 @@ público (validación target: 0.1036 vs 0.1077). Se descarta v2 y se vuelve a la
 
 | Archivo | Qué es | Validación target | Kaggle público |
 |---|---|---|---|
+| `ejemplo.csv` | ejemplo de la cátedra (mismos 20 libros para todos) | – | 0.00301 |
 | `v01_autor_newitems.csv` | afinidad por autor | 0.0668 | – |
-| `v02_ranker_v1.csv` | ranker v1 | 0.1077 | **0.11658** |
-| `v03_ranker_v2.csv` | ranker + candidatos v2 | 0.1036 | < v02 |
-| `v04_ranker_v3.csv` | ranker v3, params base | 0.1170 | – |
-| `v05_ranker_v3_deepreg.csv` | **ranker v3 deep_reg (recomendada)** | **0.1179** | – |
+| `v02_ranker_v1.csv` | ranker v1 | 0.1077 | 0.11658 |
+| `v03_ranker_v2.csv` | ranker + candidatos v2 | 0.1036 | 0.11288 |
+| `v04_ranker_v3.csv` | ranker v3, params base | 0.1170 | 0.12562 |
+| `v05_ranker_v3_deepreg.csv` | **ranker v3 deep_reg (final)** | **0.1179** | **0.12650** |
+
+La validación local ordenó las 4 submissions del ranker exactamente igual que el leaderboard
+público. Kaggle da ~0.009 más que la validación de forma consistente.
+
+Diapositiva de presentación: `docs/presentacion/` (fuente) y el artifact publicado.

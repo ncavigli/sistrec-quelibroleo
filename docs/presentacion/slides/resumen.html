@@ -1,0 +1,58 @@
+<section id="resumen" class="slide">
+<div class="head">
+<p class="eyebrow">FCEN · DATA MINING · SISTEMAS DE RECOMENDACIÓN 2026</p>
+<h2>Ranker de 2 etapas: NDCG@20 = <span class="hl">0.1265</span> en Kaggle</h2>
+</div>
+<div class="flow anim" style="--i:1">
+<div class="gens">
+<p class="chip">Popularidad reciente</p>
+<p class="chip">Autor · género</p>
+<p class="chip">ItemKNN · EASE · ALS</p>
+<p class="chip">Secuencial · sagas</p>
+</div>
+<div class="arrow-wrap"><x-shape kind="arrow-right" class="arrow"></x-shape></div>
+<div class="stage cands">
+<p class="stage-n">~380</p>
+<p class="stage-t">candidatos por lector</p>
+</div>
+<div class="arrow-wrap"><x-shape kind="arrow-right" class="arrow"></x-shape></div>
+<div class="stage ranker">
+<h3>LightGBM LambdaRank</h3>
+<p class="stage-t">~50 features: recencia, autor, sagas y perfil del lector</p>
+</div>
+<div class="arrow-wrap"><x-shape kind="arrow-right" class="arrow"></x-shape></div>
+<div class="stage top">
+<p class="stage-n">Top 20</p>
+</div>
+</div>
+<div class="bottom">
+<div class="chart anim" style="--i:2">
+<h3 class="block">NDCG@20 · leaderboard público</h3>
+<div class="row"><p class="lbl">Ejemplo de la cátedra</p><div class="track"><div class="bar base" style="width:9px"></div></div><p class="val">0.0030</p></div>
+<div class="row"><p class="lbl">v1 · ranker base</p><div class="track"><div class="bar" style="width:350px"></div></div><p class="val">0.1166</p></div>
+<div class="row"><p class="lbl">v2 · más candidatos</p><div class="track"><div class="bar" style="width:339px"></div></div><p class="val">0.1129</p></div>
+<div class="row"><p class="lbl">v3 · + secuencial y sagas</p><div class="track"><div class="bar" style="width:377px"></div></div><p class="val">0.1256</p></div>
+<div class="row best"><p class="lbl">v3 · + 5 años de train</p><div class="track"><div class="bar best" style="width:380px"></div></div><p class="val">0.1265</p></div>
+</div>
+<div class="insights anim" style="--i:3">
+<div class="ins">
+<h3>Validación temporal ≈ Kaggle</h3>
+<p class="txt">Entreno con lecturas &lt; 2024 y predigo 2024: ordenó las submissions igual que el leaderboard.</p>
+</div>
+<div class="ins">
+<h3>Lo reciente manda</h3>
+<p class="txt">La popularidad de 90 días y el decaimiento temporal casi duplican a la popularidad histórica.</p>
+</div>
+<div class="ins">
+<h3>Orden de lectura y sagas</h3>
+<p class="txt">Secuencial, tomos detectados en los títulos y 5 años de entrenamiento: +8.5% sobre v1.</p>
+</div>
+</div>
+</div>
+<p class="foot">Código: github.com/ncavigli/sistrec-quelibroleo · 461k lecturas, 832 lectores a predecir</p>
+<aside>Objetivo: recomendar 20 libros a cada uno de 832 lectores de quelibroleo, medido con NDCG@20 sobre sus lecturas futuras.
+
+Pipeline: en la primera etapa, varios modelos (popularidad reciente, afinidad por autor y género, filtrado colaborativo con ItemKNN, EASE y ALS, un modelo secuencial y uno de sagas) proponen unos 380 candidatos por lector. En la segunda, un LightGBM con objetivo LambdaRank los ordena optimizando NDCG directamente, con unas 50 features de recencia, autor, sagas y perfil del lector.
+
+Claves: validamos con un corte temporal (entrenar antes de 2024, predecir 2024), que reprodujo el orden del leaderboard. Lo reciente pesa mucho: popularidad de los últimos 90 días y decaimiento temporal. El orden de lectura y la continuación de sagas fueron la mejora final: de 0.1166 a 0.1265 en Kaggle.</aside>
+</section>

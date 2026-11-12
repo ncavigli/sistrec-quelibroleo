@@ -94,7 +94,7 @@ python -m pytest
 
 | Modelo | NDCG@20 (validación 2024) |
 |---|---|
-| **Ranker 2 etapas v3** (+ secuencial, sagas, 5 años) | **0.0907** |
+| **Ranker 2 etapas v3** (+ secuencial, sagas, 5 años) — **Kaggle público 0.12650** | **0.0907** |
 | Ranker 2 etapas v1 (Kaggle público: 0.11658) | 0.0827 |
 | Afinidad autor + novedades | 0.0535 |
 | ItemKNN con decaimiento | 0.0525 |
