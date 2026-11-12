@@ -1,0 +1,33 @@
+[fold 2022-01-01] cargado de caché: 412,992 filas
+C:\Users\nicoc\.venvs\recsys-libros\Lib\site-packages\implicit\cpu\als.py:96: RuntimeWarning: OpenBLAS is configured to use 8 threads. It is highly recommended to disable its internal threadpool by setting the environment variable 'OPENBLAS_NUM_THREADS=1' or by calling 'threadpoolctl.threadpool_limits(1, "blas")'. Having OpenBLAS use a threadpool can lead to severe performance issues here.
+  check_blas_config()
+[fold 2023-01-01] usuarios=1322 candidatos=430,071 (~325/usuario) extra_items=3325 recall_candidatos=0.277 positivos=4,673 (111s)
+[fold 2024-01-01] usuarios=1154 candidatos=401,985 (~348/usuario) extra_items=2091 recall_candidatos=0.273 positivos=3,964 (131s)
+
+VALIDACIÓN 2024-01-01: ndcg@20=0.0827 target=0.1077 recall=0.0978 hit=0.427 best_iter=280
+
+Top features (gain):
+item_days_since_first      0.073
+n_generators               0.058
+ease_score                 0.048
+autor_rank                 0.035
+reader_age                 0.035
+ua_autor_rating_rel        0.033
+autor_cnt_all              0.030
+ed_year_gap                0.029
+als_score                  0.025
+user_frac_new_releases     0.024
+ua_autor_rating            0.023
+autor_score                0.022
+item_trend_90_365          0.021
+user_days_since_last       0.021
+item_rating_n_adj          0.021
+autor_cnt_365d             0.021
+ua_editorial_days_since    0.020
+item_ed_age                0.019
+ease_rank                  0.018
+pop90_score                0.018
+[fold 2025-01-01] usuarios=832 candidatos=337,215 (~405/usuario) extra_items=1067 (146s)
+
+Submission: C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\submissions\20261112_1715_ranker_v1.csv  (426s total)
+EXIT=0

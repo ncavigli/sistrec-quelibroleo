@@ -24,3 +24,45 @@ test de Kaggle → columna `target`). Métrica principal: NDCG@20 con relevancia
   modelos + LightGBM LambdaRank que aprende a combinarlos con features de recencia, autor, género, etc.).
 
 Submission `v01_autor_newitems.csv` generada (sin subir aún).
+
+## v0.2 – Modelos individuales con decaimiento temporal
+
+| Modelo | NDCG@20 | NDCG@20 target |
+|---|---|---|
+| ItemKNN con decaimiento (vida media 2 años) | 0.0525 | 0.0668 |
+| EASE^R (8.000 libros más leídos, λ=500) | 0.0391 | 0.0481 |
+| ALS (128 factores) | 0.0328 | 0.0391 |
+| RP3beta con decaimiento | 0.0117 | 0.0127 |
+
+El decaimiento temporal sube ItemKNN de 0.0346 a 0.0525 (+52%): lo que leíste hace poco dice
+mucho más de lo que vas a leer que lo que leíste hace 10 años.
+
+## v1 – Ranker de 2 etapas (LightGBM LambdaRank)
+
+**Etapa 1 – candidatos** (~350/lector): pop90 (100), pop365 (50), autor (150), autor sin
+popularidad (50), género (100), ItemKNN (100), EASE (100), ALS (100) + novedades del catálogo.
+
+**Etapa 2 – ranker:** LightGBM `lambdarank` (optimiza NDCG@20) con ~45 features.
+
+**Folds temporales:** train = folds 2022 y 2023 (features con datos < año, etiquetas = lecturas
+nuevas de ese año); validación = fold 2024; final = re-entrenado con 2022+2023+2024, aplicado
+a features con todo el historial.
+
+| | NDCG@20 | NDCG@20 target | Recall@20 | Hit@20 |
+|---|---|---|---|---|
+| **Ranker v1** | **0.0827** | **0.1077** | 0.0978 | 0.427 |
+| Mejor modelo individual (autor) | 0.0535 | 0.0668 | 0.0624 | 0.312 |
+
+**+55% sobre el mejor modelo individual.** Recall de candidatos ≈ 0.27–0.30: es el techo
+actual (el 70% de lo que se lee no está entre los candidatos), así que la próxima mejora
+grande pasa por generar mejores candidatos.
+
+Features más importantes (gain): antigüedad del libro en el sitio (`item_days_since_first`),
+cuántos generadores lo propusieron (`n_generators`), puntaje EASE, posición en el ranking por
+autor, edad del lector, rating relativo que le da al autor, popularidad total del autor.
+
+> Nota: el número de árboles se eligió con early stopping sobre el mismo fold 2024 que se
+> reporta, así que 0.0827 es levemente optimista.
+
+Submission: `v02_ranker_v1.csv` (2.366 libros distintos, 336 recomendaciones son novedades
+sin interacciones previas).

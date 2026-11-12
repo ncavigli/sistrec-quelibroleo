@@ -23,6 +23,15 @@ competencia Kaggle **FCEN DM – Sistemas de Recomendación 2026** (Maestría en
    (`--new-items`) y los recomendamos por afinidad de autor/género.
 4. Ya leído ≠ recomendable: se excluyen siempre los libros que el lector ya tiene en su historial.
 
+## Arquitectura
+
+```
+                 ┌─ popularidad 90d / 365d ─┐
+historial ──────►├─ afinidad autor / género ─┤──► ~350 candidatos ──► features ──► LightGBM ──► top-20
+(< corte)        ├─ ItemKNN / EASE / ALS ────┤    por lector          (~45)       LambdaRank
+catálogo ───────►└─ novedades del catálogo ──┘
+```
+
 ## Estructura
 
 ```
@@ -42,9 +51,14 @@ src/sistrec/
     factorization.py ALS / BPR (librería implicit)
     content.py       afinidad por autor / género
     hybrid.py        ensamble ponderado
+  ranking/
+    candidates.py    etapa 1: candidatos de varios modelos + sus puntajes/posiciones
+    features.py      etapa 2: features de libro, autor, lector y lector x libro
+    pipeline.py      folds temporales + LightGBM LambdaRank
 scripts/
   validate.py         compara modelos en el split temporal
-  make_submission.py  entrena con todo y genera el CSV para Kaggle
+  make_submission.py  submission con un modelo individual
+  train_ranker.py     pipeline completo de 2 etapas: valida en 2024 y genera la submission
 tests/                tests de métricas y de modelos
 ```
 
@@ -60,13 +74,26 @@ py -3.12 -m venv ~/.venvs/recsys-libros
 # 3. Validar modelos
 python scripts/validate.py --cutoff 2024-01-01 --models pop rp3beta itemknn autor --new-items
 
-# 4. Generar submission
-python scripts/make_submission.py --model rp3beta --new-items
+# 4. Ranker de 2 etapas (mejor modelo): valida y genera submissions/<fecha>_ranker.csv
+python scripts/train_ranker.py            # ~7 min la primera vez; luego usa folds cacheados
+python scripts/train_ranker.py --rebuild  # si cambiaste candidatos o features
+
+# 4b. Submission con un modelo individual
+python scripts/make_submission.py --model autor --new-items
 
 # 5. Tests
 python -m pytest
 ```
 
 ## Resultados de validación
+
+| Modelo | NDCG@20 (validación 2024) |
+|---|---|
+| **Ranker 2 etapas v1** | **0.0827** |
+| Afinidad autor + novedades | 0.0535 |
+| ItemKNN con decaimiento | 0.0525 |
+| Popularidad reciente | 0.0387 |
+| Popularidad histórica | 0.0203 |
+
 
 Ver [`docs/RESULTADOS.md`](docs/RESULTADOS.md).

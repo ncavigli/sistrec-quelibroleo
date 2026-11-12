@@ -2,10 +2,6 @@
 
 from __future__ import annotations
 
-import os
-
-os.environ.setdefault("OPENBLAS_NUM_THREADS", "1")  # recomendado por implicit
-
 import numpy as np
 from implicit.als import AlternatingLeastSquares
 from implicit.bpr import BayesianPersonalizedRanking
