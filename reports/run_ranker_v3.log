@@ -1,0 +1,124 @@
+C:\Users\nicoc\.venvs\recsys-libros\Lib\site-packages\implicit\cpu\als.py:96: RuntimeWarning: OpenBLAS is configured to use 8 threads. It is highly recommended to disable its internal threadpool by setting the environment variable 'OPENBLAS_NUM_THREADS=1' or by calling 'threadpoolctl.threadpool_limits(1, "blas")'. Having OpenBLAS use a threadpool can lead to severe performance issues here.
+  check_blas_config()
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+   recall por generador: pop90=0.171  pop365=0.099  autor=0.182  autor_pure=0.082  genero=0.164  itemknn=0.163  ease=0.176  als=0.157  sequential=0.168  saga=0.051
+[fold 2019-01-01] usuarios=1978 candidatos=595,959 (~301/usuario) extra_items=8866 recall_candidatos=0.298 positivos=7,421 (107s)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+   recall por generador: pop90=0.168  pop365=0.105  autor=0.174  autor_pure=0.078  genero=0.158  itemknn=0.168  ease=0.181  als=0.151  sequential=0.166  saga=0.043
+[fold 2020-01-01] usuarios=1763 candidatos=558,633 (~317/usuario) extra_items=7290 recall_candidatos=0.312 positivos=7,658 (107s)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+   recall por generador: pop90=0.158  pop365=0.094  autor=0.159  autor_pure=0.065  genero=0.152  itemknn=0.160  ease=0.173  als=0.140  sequential=0.158  saga=0.031
+[fold 2021-01-01] usuarios=1464 candidatos=496,167 (~339/usuario) extra_items=5835 recall_candidatos=0.304 positivos=5,834 (108s)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+   recall por generador: pop90=0.146  pop365=0.081  autor=0.159  autor_pure=0.069  genero=0.137  itemknn=0.144  ease=0.153  als=0.122  sequential=0.135  saga=0.026
+[fold 2022-01-01] usuarios=1267 candidatos=439,376 (~347/usuario) extra_items=4517 recall_candidatos=0.306 positivos=4,815 (145s)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+   recall por generador: pop90=0.126  pop365=0.076  autor=0.159  autor_pure=0.066  genero=0.131  itemknn=0.139  ease=0.145  als=0.117  sequential=0.132  saga=0.028
+[fold 2023-01-01] usuarios=1322 candidatos=460,543 (~348/usuario) extra_items=3325 recall_candidatos=0.287 positivos=4,841 (115s)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+   recall por generador: pop90=0.110  pop365=0.067  autor=0.139  autor_pure=0.065  genero=0.115  itemknn=0.131  ease=0.135  als=0.099  sequential=0.117  saga=0.017
+[fold 2024-01-01] usuarios=1154 candidatos=434,680 (~377/usuario) extra_items=2091 recall_candidatos=0.285 positivos=4,136 (143s)
+
+VALIDACIÓN 2024-01-01: ndcg@20=0.0896 target=0.1170 recall=0.1071 hit=0.452 best_iter=273
+
+Top features (gain):
+n_generators              0.103
+autor_rank                0.042
+item_days_since_first     0.041
+autor_cnt_all             0.033
+ua_autor_rating_rel       0.033
+pop90_rank                0.031
+item_cnt_180d             0.030
+ease_rank                 0.030
+sequential_score          0.029
+reader_age                0.028
+autor_score               0.027
+sequential_rank           0.026
+ed_year_gap               0.026
+item_ed_age               0.023
+ease_score                0.023
+item_trend_90_365         0.021
+item_rating_mean          0.020
+pop90_score               0.018
+item_cnt_90d              0.018
+user_frac_new_releases    0.018
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\src\sistrec\ranking\candidates.py:57: RuntimeWarning: All-NaN slice encountered
+  mx = np.nanmax(np.where(s > -1e5, s, np.nan), axis=1, keepdims=True)
+[fold 2025-01-01] usuarios=832 candidatos=369,441 (~444/usuario) extra_items=1067 (127s)
+
+Submission: C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\submissions\20261112_1811_ranker_v3.csv  (936s total)
+EXIT=0

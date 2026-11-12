@@ -4,7 +4,8 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from .models import ALS, EASE, AttributeAffinity, ItemKNN, Popularity, Recommender, RP3beta
+from .models import (ALS, EASE, AttributeAffinity, ItemKNN, Popularity, Recommender, RP3beta,
+                     Sequential, SeriesContinuation)
 
 MODELS: dict[str, Callable[[], Recommender]] = {
     "pop": lambda: Popularity(),
@@ -16,5 +17,9 @@ MODELS: dict[str, Callable[[], Recommender]] = {
     "ease": lambda: EASE(l2=500, max_items=8000),
     "als": lambda: ALS(factors=128, regularization=0.05, alpha=20, iterations=20),
     "autor": lambda: AttributeAffinity("autor", gamma=0.5, half_life_days=730),
+    "sequential": lambda: Sequential(),
+    "sequential_w20": lambda: Sequential(window=20, last_n=50),
+    "sequential_nopen": lambda: Sequential(pop_beta=0.0),
+    "saga": lambda: SeriesContinuation(),
     "genero": lambda: AttributeAffinity("genero", gamma=1.0, half_life_days=365),
 }

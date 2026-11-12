@@ -48,7 +48,8 @@ def next_year(cutoff: str) -> str:
 
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("--train-folds", nargs="+", default=["2022-01-01", "2023-01-01"])
+    p.add_argument("--train-folds", nargs="+",
+                   default=["2019-01-01", "2020-01-01", "2021-01-01", "2022-01-01", "2023-01-01"])
     p.add_argument("--valid-fold", default="2024-01-01")
     p.add_argument("--rebuild", action="store_true")
     p.add_argument("--no-submission", action="store_true")

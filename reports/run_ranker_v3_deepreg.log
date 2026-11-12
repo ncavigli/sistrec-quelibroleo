@@ -1,0 +1,33 @@
+[fold 2019-01-01] cargado de caché: 595,959 filas
+[fold 2020-01-01] cargado de caché: 558,633 filas
+[fold 2021-01-01] cargado de caché: 496,167 filas
+[fold 2022-01-01] cargado de caché: 439,376 filas
+[fold 2023-01-01] cargado de caché: 460,543 filas
+[fold 2024-01-01] cargado de caché: 434,680 filas
+
+VALIDACIÓN 2024-01-01: ndcg@20=0.0907 target=0.1179 recall=0.1076 hit=0.453 best_iter=314
+
+Top features (gain):
+n_generators              0.075
+pop90_rank                0.042
+autor_score               0.041
+item_cnt_180d             0.040
+item_days_since_first     0.036
+reader_age                0.035
+ease_rank                 0.031
+ua_autor_rating_rel       0.029
+ease_score                0.028
+autor_rank                0.027
+autor_cnt_all             0.025
+sequential_rank           0.025
+item_rating_mean          0.024
+sequential_score          0.022
+item_ed_age               0.022
+ed_year_gap               0.021
+autor_cnt_365d            0.018
+item_trend_90_365         0.018
+user_frac_new_releases    0.017
+als_score                 0.016
+[fold 2025-01-01] cargado de caché: 369,441 filas
+
+Submission: C:\Users\nicoc\OneDrive\Documents\Maestria DM\Sistemas de Recomendacion\sistrec-quelibroleo\submissions\20261112_1818_ranker_v3_deepreg.csv  (100s total)

@@ -106,3 +106,51 @@ agregó v2 son "difíciles" (entran como candidatos pero el ranker no tiene info
 subirlos). Las próximas mejoras tienen que aportar señal nueva (secuencias/sagas, más folds).
 
 Submission `v03_ranker_v2.csv` generada; no vale la pena gastar un envío: es equivalente a v02.
+
+Kaggle confirmó la validación: `v03_ranker_v2.csv` dio **peor** que `v02` en el leaderboard
+público (validación target: 0.1036 vs 0.1077). Se descarta v2 y se vuelve a la base v1.
+
+## v3 – Señal secuencial + sagas + más años de entrenamiento
+
+**Generadores nuevos:**
+- `Sequential`: transiciones dirigidas "después de leer i se lee j" (próximas 10 lecturas, ≤ 365
+  días; mismo día = ambas direcciones). Perfil = últimas 30 lecturas con decaimiento 0.9^k.
+  Solo: NDCG 0.0471 (2 s de entrenamiento, vs 80 s de ItemKNN con 0.0525).
+- `SeriesContinuation`: detecta saga + tomo en el título (`series.py`; 1.878 libros, 801 sagas,
+  9.2% de las lecturas) y recomienda el tomo siguiente. Solo: 0.0168 (aplica a pocos lectores).
+
+**Features nuevas:** tomo del libro, tomos leídos de esa saga, tomo máximo leído, días desde la
+última lectura de la saga, distancia al tomo siguiente.
+
+**Folds de entrenamiento:** 2019–2023 (antes 2022–2023).
+
+### Ablación (2 semillas, `tune_ranker.py`)
+
+| Candidatos | Folds train | base | deep_reg |
+|---|---|---|---|
+| v1 | 2022–23 | 0.0833 | 0.0840 |
+| v3 | 2022–23 | 0.0871 | 0.0880 |
+| v3 | 2019–23 | 0.0874 | **0.0911** |
+
+- Secuencial + sagas: **+0.004**. Más años: **+0.003**, pero sólo con un ranker de mayor
+  capacidad y más regularizado (`deep_reg`: 127 hojas, min_child 300, λ=10, colsample 0.5),
+  que pasa a ser el default.
+
+### Resultado final v3
+
+| | NDCG@20 | NDCG@20 target | Recall@20 | Hit@20 |
+|---|---|---|---|---|
+| **Ranker v3 deep_reg** | **0.0907** | **0.1179** | 0.1076 | 0.453 |
+| Ranker v1 | 0.0827 | 0.1077 | 0.0978 | 0.427 |
+
+370 recomendaciones son el tomo siguiente de una saga en curso. 68% de coincidencia con v02.
+
+## Historial de submissions
+
+| Archivo | Qué es | Validación target | Kaggle público |
+|---|---|---|---|
+| `v01_autor_newitems.csv` | afinidad por autor | 0.0668 | – |
+| `v02_ranker_v1.csv` | ranker v1 | 0.1077 | **0.11658** |
+| `v03_ranker_v2.csv` | ranker + candidatos v2 | 0.1036 | < v02 |
+| `v04_ranker_v3.csv` | ranker v3, params base | 0.1170 | – |
+| `v05_ranker_v3_deepreg.csv` | **ranker v3 deep_reg (recomendada)** | **0.1179** | – |

@@ -8,6 +8,7 @@ Grupos:
   - Lector:         actividad, recencia, rating medio, gusto por novedades.
   - Lector x libro: cuántos libros leyó del autor/género/editorial, cuándo fue la última vez,
                     qué rating le dio al autor, distancia al año de edición que suele leer.
+  - Sagas:          tomo del libro, cuántos tomos de la saga leyó, si es el siguiente.
 """
 
 from __future__ import annotations
@@ -16,6 +17,7 @@ import numpy as np
 import pandas as pd
 
 from ..config import ITEM_COL, USER_COL
+from ..series import series_table
 
 WINDOWS = (30, 90, 180, 365)
 
@@ -111,6 +113,24 @@ def build_features(
         df = df.join(uf, on=[USER_COL, attr])
         df[f"ua_{attr}_cnt"] = df[f"ua_{attr}_cnt"].fillna(0)
         df[f"ua_{attr}_share"] = df[f"ua_{attr}_share"].fillna(0)
+
+    # --- sagas: ¿el lector viene leyendo esta saga? ¿éste es el tomo siguiente?
+    st = series_table(books)
+    df = df.join(st.rename(columns={"serie": "_serie", "tomo": "item_saga_tomo"}), on=ITEM_COL)
+    read = train[[USER_COL, ITEM_COL, "fecha"]].join(st, on=ITEM_COL, how="inner")
+    g = read.groupby([USER_COL, "serie"])
+    us = pd.DataFrame({
+        "ua_saga_cnt": g.size(),
+        "ua_saga_max_tomo": g["tomo"].max(),
+        "ua_saga_days_since": (ref - g["fecha"].max()).dt.days,
+    })
+    us.index = us.index.set_names([USER_COL, "_serie"])
+    df = df.join(us, on=[USER_COL, "_serie"])
+    saga_cols = ["item_saga_tomo", "ua_saga_cnt", "ua_saga_max_tomo", "ua_saga_days_since"]
+    df[saga_cols] = df[saga_cols].astype("float32")
+    df["ua_saga_cnt"] = df["ua_saga_cnt"].fillna(0)
+    df["ua_saga_next_gap"] = df["item_saga_tomo"] - df["ua_saga_max_tomo"]  # 1 = tomo siguiente
+    df = df.drop(columns=["_serie"])
 
     df["ed_year_gap"] = df["anio_edicion"] - df["user_ed_year_mean"]
     df["ua_autor_rating_rel"] = df["ua_autor_rating"] - df["user_rating_mean"]

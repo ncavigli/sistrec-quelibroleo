@@ -6,6 +6,7 @@ import pandas as pd
 import pytest
 
 from sistrec.models import (EASE, AttributeAffinity, ItemKNN, NewItemAffinity, Popularity, RP3beta,
+                            Sequential, SeriesContinuation,
                             WeightedHybrid)
 from sistrec.split import temporal_split
 
@@ -19,7 +20,8 @@ def data():
             rows.append((f"u{u}", f"b{it}", pd.Timestamp("2023-01-01") + pd.Timedelta(days=int(rng.integers(0, 700))), float(rng.integers(1, 11))))
     df = pd.DataFrame(rows, columns=["id_lector", "id_libro", "fecha", "rating"])
     books = pd.DataFrame(
-        {"autor": [f"A{i % 7}" for i in range(45)], "genero": ["G"] * 45,
+        {"titulo": [f"LIBRO {i} (Saga S{i % 7} {i // 7 + 1})" for i in range(45)],
+         "autor": [f"A{i % 7}" for i in range(45)], "genero": ["G"] * 45,
          "editorial": ["E"] * 45, "anio_edicion": [2020] * 40 + [2025] * 5},
         index=[f"b{i}" for i in range(45)],
     )
@@ -33,6 +35,8 @@ MODELS = [
     lambda: EASE(l2=10, max_items=30),
     lambda: AttributeAffinity("autor"),
     lambda: NewItemAffinity(),
+    lambda: Sequential(window=3, last_n=5),
+    lambda: SeriesContinuation(),
     lambda: WeightedHybrid([ItemKNN(k_neighbors=10), AttributeAffinity("autor")], [1.0, 0.5]),
 ]
 

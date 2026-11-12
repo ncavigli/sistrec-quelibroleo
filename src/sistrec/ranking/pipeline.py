@@ -22,26 +22,34 @@ from ..config import ITEM_COL, K, SEED, USER_COL
 from ..data import new_catalog_items
 from ..metrics import evaluate
 from ..models import (ALS, EASE, AttributeAffinity, ItemKNN, NewItemAffinity, Popularity,
-                      Recommender)
+                      Recommender, Sequential, SeriesContinuation)
 from ..split import temporal_split
 from .candidates import candidate_recall, generate_candidates
 from .features import build_features, feature_columns
 
 # Cambiar cuando cambian generadores/features: invalida los folds cacheados.
-CANDIDATES_VERSION = "v2"
-NEW_ITEMS_YEARS_BACK = 3  # novedades = libros sin lecturas editados desde (año corte - 3)
+CANDIDATES_VERSION = "v3"
+NEW_ITEMS_YEARS_BACK = 1  # novedades = libros sin lecturas editados desde (año corte - 1)
 
 # nombre -> (fábrica, cantidad de candidatos que aporta)
+# v3 = base v1 (v2 con más candidatos/novedades no mejoró ni en validación ni en Kaggle)
+#      + secuencial (orden de lectura) + continuación de sagas.
 DEFAULT_GENERATORS: dict[str, tuple[Callable[[], Recommender], int]] = {
     "pop90": (lambda: Popularity(half_life_days=90), 100),
     "pop365": (lambda: Popularity(half_life_days=365), 50),
     "autor": (lambda: AttributeAffinity("autor", gamma=0.5, half_life_days=730), 150),
-    "autor_pure": (lambda: AttributeAffinity("autor", gamma=0.0, half_life_days=730), 100),
-    "novedades": (lambda: NewItemAffinity(half_life_days=730), 150),
+    "autor_pure": (lambda: AttributeAffinity("autor", gamma=0.0, half_life_days=730), 50),
     "genero": (lambda: AttributeAffinity("genero", gamma=1.0, half_life_days=365), 100),
-    "itemknn": (lambda: ItemKNN(k_neighbors=200, shrink=10, half_life_days=730), 200),
-    "ease": (lambda: EASE(l2=500, max_items=8000, half_life_days=730), 150),
+    "itemknn": (lambda: ItemKNN(k_neighbors=200, shrink=10, half_life_days=730), 100),
+    "ease": (lambda: EASE(l2=500, max_items=8000, half_life_days=730), 100),
     "als": (lambda: ALS(factors=128, regularization=0.05, alpha=20, iterations=20), 100),
+    "sequential": (lambda: Sequential(pop_beta=0.0), 100),
+    "saga": (lambda: SeriesContinuation(), 30),
+}
+
+# Generadores probados y descartados (se dejan para referencia/experimentos):
+EXTRA_GENERATORS = {
+    "novedades": (lambda: NewItemAffinity(half_life_days=730), 150),
 }
 
 
@@ -96,17 +104,19 @@ def build_fold(
     return Fold(name=cutoff, frame=frame, ground_truth=gt, cand_recall=rec)
 
 
+# "deep_reg": ganó la comparación con 5 folds (scripts/tune_ranker.py). Con más datos de
+# entrenamiento conviene más capacidad (127 hojas) compensada con regularización fuerte.
 DEFAULT_PARAMS = dict(
     objective="lambdarank",
     metric="ndcg",
     lambdarank_truncation_level=K,
     learning_rate=0.03,
-    num_leaves=63,
-    min_child_samples=100,
+    num_leaves=127,
+    min_child_samples=300,
     subsample=0.8,
     subsample_freq=1,
-    colsample_bytree=0.7,
-    reg_lambda=1.0,
+    colsample_bytree=0.5,
+    reg_lambda=10.0,
     n_estimators=2000,
     random_state=SEED,
     verbose=-1,

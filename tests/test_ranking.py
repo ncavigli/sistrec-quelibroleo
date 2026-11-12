@@ -20,7 +20,7 @@ def _data():
             rows.append((f"u{u}", f"b{it}", d, float(rng.integers(1, 11))))
     df = pd.DataFrame(rows, columns=["id_lector", "id_libro", "fecha", "rating"])
     books = pd.DataFrame(
-        {"autor": [f"A{i % 9}" for i in range(65)], "genero": [f"G{i % 4}" for i in range(65)],
+        {"titulo": [f"T{i}" for i in range(65)], "autor": [f"A{i % 9}" for i in range(65)], "genero": [f"G{i % 4}" for i in range(65)],
          "editorial": ["E"] * 65, "anio_edicion": [2015.0] * 60 + [2024.0] * 5},
         index=[f"b{i}" for i in range(65)],
     )

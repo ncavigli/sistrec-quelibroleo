@@ -26,10 +26,12 @@ competencia Kaggle **FCEN DM – Sistemas de Recomendación 2026** (Maestría en
 ## Arquitectura
 
 ```
-                 ┌─ popularidad 90d / 365d ─┐
-historial ──────►├─ afinidad autor / género ─┤──► ~350 candidatos ──► features ──► LightGBM ──► top-20
-(< corte)        ├─ ItemKNN / EASE / ALS ────┤    por lector          (~45)       LambdaRank
-catálogo ───────►└─ novedades del catálogo ──┘
+                 ┌─ popularidad 90d / 365d ───┐
+                 ├─ afinidad autor / género ───┤
+historial ──────►├─ ItemKNN / EASE / ALS ──────┤──► ~380 candidatos ──► features ──► LightGBM ──► top-20
+(< corte)        ├─ secuencial (orden lectura) ┤    por lector          (~50)       LambdaRank
+catálogo ───────►├─ continuación de sagas ─────┤
+                 └─ novedades del catálogo ────┘
 ```
 
 ## Estructura
@@ -43,13 +45,15 @@ src/sistrec/
   evaluation.py    corre y registra experimentos
   submission.py    escribe y valida el CSV
   registry.py      configuraciones de modelos por nombre
+  series.py        detección de saga + tomo en los títulos
   models/
     base.py          interfaz común (exclusión de vistos, cold start, top-K)
     popularity.py    popularidad (con decaimiento temporal opcional)
     neighborhood.py  ItemKNN (coseno) y RP3beta (random walk)
     ease.py          EASE^R (autoencoder lineal, solución cerrada)
     factorization.py ALS / BPR (librería implicit)
-    content.py       afinidad por autor / género
+    content.py       afinidad por autor / género / novedades
+    sequential.py    transiciones entre lecturas y continuación de sagas
     hybrid.py        ensamble ponderado
   ranking/
     candidates.py    etapa 1: candidatos de varios modelos + sus puntajes/posiciones
@@ -59,6 +63,7 @@ scripts/
   validate.py         compara modelos en el split temporal
   make_submission.py  submission con un modelo individual
   train_ranker.py     pipeline completo de 2 etapas: valida en 2024 y genera la submission
+  tune_ranker.py      compara versiones de candidatos / configs del ranker con varias semillas
 tests/                tests de métricas y de modelos
 ```
 
@@ -75,7 +80,7 @@ py -3.12 -m venv ~/.venvs/recsys-libros
 python scripts/validate.py --cutoff 2024-01-01 --models pop rp3beta itemknn autor --new-items
 
 # 4. Ranker de 2 etapas (mejor modelo): valida y genera submissions/<fecha>_ranker.csv
-python scripts/train_ranker.py            # ~7 min la primera vez; luego usa folds cacheados
+python scripts/train_ranker.py            # ~15 min la primera vez; luego usa folds cacheados
 python scripts/train_ranker.py --rebuild  # si cambiaste candidatos o features
 
 # 4b. Submission con un modelo individual
@@ -89,7 +94,8 @@ python -m pytest
 
 | Modelo | NDCG@20 (validación 2024) |
 |---|---|
-| **Ranker 2 etapas v1** | **0.0827** |
+| **Ranker 2 etapas v3** (+ secuencial, sagas, 5 años) | **0.0907** |
+| Ranker 2 etapas v1 (Kaggle público: 0.11658) | 0.0827 |
 | Afinidad autor + novedades | 0.0535 |
 | ItemKNN con decaimiento | 0.0525 |
 | Popularidad reciente | 0.0387 |
