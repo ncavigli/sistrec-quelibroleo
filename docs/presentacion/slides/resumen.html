@@ -1,6 +1,6 @@
 <section id="resumen" class="slide">
 <div class="head">
-<p class="eyebrow">FCEN · DATA MINING · SISTEMAS DE RECOMENDACIÓN 2026</p>
+<p class="eyebrow">UBA · MAESTRIA DATA MINING · SISTEMAS DE RECOMENDACIÓN 2026</p>
 <h2>Ranker de 2 etapas: NDCG@20 = <span class="hl">0.1265</span> en Kaggle</h2>
 </div>
 <div class="flow anim" style="--i:1">
@@ -50,7 +50,11 @@
 </div>
 </div>
 <p class="foot">Código: github.com/ncavigli/sistrec-quelibroleo · 461k lecturas, 832 lectores a predecir</p>
-<aside>Objetivo: recomendar 20 libros a cada uno de 832 lectores de quelibroleo, medido con NDCG@20 sobre sus lecturas futuras.
+<aside>GUION (menos de 30 segundos):
+El objetivo era recomendar 20 libros a 832 lectores. Armé un sistema en dos etapas: varios modelos proponen unos 380 candidatos por lector y un LightGBM los ordena optimizando directamente el NDCG. Esa primera versión dio 0.1166. En la v2 sumé más candidatos y novedades, pero empeoró: más candidatos no siempre es mejor. En la v3 agregué el orden de lectura y la detección de sagas, y subió a 0.1256. Por último entrené con cinco años de historia y un modelo más regularizado: 0.1265, el mejor resultado.
+
+SI PREGUNTAN:
+Validación: entrené con lecturas anteriores a 2024 y predije 2024; ese corte temporal ordenó las submissions igual que el leaderboard.
 
 Pipeline: en la primera etapa, varios modelos (popularidad reciente, afinidad por autor y género, filtrado colaborativo con ItemKNN, EASE y ALS, un modelo secuencial y uno de sagas) proponen unos 380 candidatos por lector. En la segunda, un LightGBM con objetivo LambdaRank los ordena optimizando NDCG directamente, con unas 50 features de recencia, autor, sagas y perfil del lector.
 
