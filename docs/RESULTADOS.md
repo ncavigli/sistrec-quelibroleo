@@ -154,9 +154,50 @@ público (validación target: 0.1036 vs 0.1077). Se descarta v2 y se vuelve a la
 | `v02_ranker_v1.csv` | ranker v1 | 0.1077 | 0.11658 |
 | `v03_ranker_v2.csv` | ranker + candidatos v2 | 0.1036 | 0.11288 |
 | `v04_ranker_v3.csv` | ranker v3, params base | 0.1170 | 0.12562 |
-| `v05_ranker_v3_deepreg.csv` | **ranker v3 deep_reg (final)** | **0.1179** | **0.12650** |
+| `v05_ranker_v3_deepreg.csv` | ranker v3 deep_reg | 0.1179 | 0.12650 |
+| `v06_ranker_v4.csv` | **ranker v4: fecha de alta, texto, ediciones, cortes semestrales** | **0.1345** | pendiente |
 
 La validación local ordenó las 4 submissions del ranker exactamente igual que el leaderboard
 público. Kaggle da ~0.009 más que la validación de forma consistente.
 
 Diapositiva de presentación: `docs/presentacion/` (fuente) y el artifact publicado.
+
+## v4 – Fecha de alta, texto, ediciones y cortes semestrales
+
+Inspirado en las "piezas que funcionaron" de otro equipo. Comparadas con nuestro sistema, faltaban:
+
+1. **Fecha de alta en el sitio.** Está en nuestros datos: el nombre de la tapa (`img_src`) trae un
+   timestamp Unix (`libro-1585241180.jpg` → 2020-03-26). 85% de las novedades leídas en 2024 lo
+   tienen; mediana alta → primera lectura = 38 días; 1.244 libros dados de alta en 2025 sin lecturas.
+   Uso: (a) las novedades candidatas se eligen también por alta en el último año (hasta 18 meses
+   después del corte, como en el catálogo real); (b) el generador `novedades` suma un término de
+   alta reciente; (c) features `item_days_since_alta`, `user_frac_read_fresh`, `user_alta_lag_median`.
+2. **Similitud de resúmenes** (`text.py`): TF-IDF de título + resumen → SVD 64 dims. Features
+   `text_sim_long` (perfil de las últimas 50 lecturas) y `text_sim_short` (últimas 5).
+3. **Ediciones**: `obra` = título sin subtítulo + autor normalizado; feature `ua_otra_edicion`.
+   Autores normalizados (sin tildes ni puntuación) en todo el pipeline.
+4. **Cortes semestrales**: 9 folds de entrenamiento (2019-01 … 2023-01, cada uno etiqueta el año
+   siguiente) en vez de 5 anuales.
+
+| | NDCG@20 | NDCG@20 target | Recall@20 | Hit@20 |
+|---|---|---|---|---|
+| **Ranker v4** (seed 42, el de la submission) | **0.1014** | **0.1345** | 0.1114 | 0.457 |
+| Ranker v3 deep_reg | 0.0907 | 0.1179 | 0.1076 | 0.453 |
+
+### Ablación (seed 0, `tune_ranker.py --drop-features / --drop-generators`)
+
+| Variante | NDCG@20 | Target | Aporte |
+|---|---|---|---|
+| Completo v4 | 0.1042 | 0.1380 | – |
+| Sin generador de novedades | 0.0960 | 0.1270 | **+0.0082** |
+| Sin features de alta | 0.0983 | 0.1278 | **+0.0059** |
+| Cortes anuales | 0.1015 | 0.1353 | +0.0027 |
+| Sin similitud de texto | 0.1031 | 0.1361 | +0.0011 |
+| Sin ediciones | 0.1034 | 0.1373 | +0.0008 |
+
+La fecha de alta explica la mayor parte de la mejora. Texto y ediciones están en el orden del
+ruido entre semillas (~0.001–0.003), no restan y se mantienen.
+
+`v06_ranker_v4.csv` recomienda 1.319 libros dados de alta en 2025 (v05: 418); 74.5% de
+coincidencia con v05. Novedades más recomendadas: lo nuevo de Dicker, Aramburu, Lorenzo Silva,
+Lemaitre (Los años gloriosos 3), Pérez-Reverte (Alatriste VIII).

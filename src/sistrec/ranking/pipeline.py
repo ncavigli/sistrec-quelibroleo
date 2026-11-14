@@ -24,16 +24,21 @@ from ..metrics import evaluate
 from ..models import (ALS, EASE, AttributeAffinity, ItemKNN, NewItemAffinity, Popularity,
                       Recommender, Sequential, SeriesContinuation)
 from ..split import temporal_split
+from ..text import book_embeddings
 from .candidates import candidate_recall, generate_candidates
 from .features import build_features, feature_columns
 
 # Cambiar cuando cambian generadores/features: invalida los folds cacheados.
-CANDIDATES_VERSION = "v3"
-NEW_ITEMS_YEARS_BACK = 1  # novedades = libros sin lecturas editados desde (año corte - 1)
+CANDIDATES_VERSION = "v4"
+NEW_ITEMS_YEARS_BACK = 1  # novedades = libros sin lecturas editados desde (año corte - 1)...
+NEW_ITEMS_ALTA_DAYS = 365  # ...o dados de alta en el sitio en el último año
+NEW_ITEMS_ALTA_AHEAD = 548  # (hasta 18 meses después del corte, como el catálogo real)
 
 # nombre -> (fábrica, cantidad de candidatos que aporta)
 # v3 = base v1 (v2 con más candidatos/novedades no mejoró ni en validación ni en Kaggle)
 #      + secuencial (orden de lectura) + continuación de sagas.
+# v4 = v3 + novedades elegidas por fecha de alta en el sitio (generador `novedades` con prior
+#      de alta reciente) + features de alta, ediciones y similitud de texto.
 DEFAULT_GENERATORS: dict[str, tuple[Callable[[], Recommender], int]] = {
     "pop90": (lambda: Popularity(half_life_days=90), 100),
     "pop365": (lambda: Popularity(half_life_days=365), 50),
@@ -45,12 +50,11 @@ DEFAULT_GENERATORS: dict[str, tuple[Callable[[], Recommender], int]] = {
     "als": (lambda: ALS(factors=128, regularization=0.05, alpha=20, iterations=20), 100),
     "sequential": (lambda: Sequential(pop_beta=0.0), 100),
     "saga": (lambda: SeriesContinuation(), 30),
+    "novedades": (lambda: NewItemAffinity(half_life_days=730, w_alta=0.5), 100),
 }
 
 # Generadores probados y descartados (se dejan para referencia/experimentos):
-EXTRA_GENERATORS = {
-    "novedades": (lambda: NewItemAffinity(half_life_days=730), 150),
-}
+EXTRA_GENERATORS: dict[str, tuple[Callable[[], Recommender], int]] = {}
 
 
 @dataclass
@@ -78,14 +82,19 @@ def build_fold(
         train, gt, users = split.train, split.ground_truth, split.users
     else:  # fold final (sin etiquetas)
         train, gt = df[df["fecha"] < cutoff_ts], {}
-    extra = new_catalog_items(books, train, cutoff_ts.year - NEW_ITEMS_YEARS_BACK)
+    extra = new_catalog_items(books, train, cutoff_ts.year - NEW_ITEMS_YEARS_BACK,
+                              alta_since=cutoff_ts - pd.Timedelta(days=NEW_ITEMS_ALTA_DAYS))
+    if "fecha_alta" in books:  # no sumar libros dados de alta mucho después del corte
+        late = books["fecha_alta"].reindex(extra) > cutoff_ts + pd.Timedelta(days=NEW_ITEMS_ALTA_AHEAD)
+        extra = [e for e, l in zip(extra, late.to_numpy()) if not l]
 
     fitted = {}
     for name, (factory, _) in generators.items():
         fitted[name] = factory().fit(train, books, extra)
     cands = generate_candidates(fitted, {n: k for n, (_, k) in generators.items()}, users)
     del fitted
-    frame = build_features(cands, train, books, readers)
+    text_emb = book_embeddings(books) if "resumen" in books else None
+    frame = build_features(cands, train, books, readers, text_emb=text_emb)
     rec = None
     if gt:
         pos = {(u, i) for u, items in gt.items() for i in items}

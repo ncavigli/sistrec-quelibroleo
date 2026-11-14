@@ -12,7 +12,7 @@ import scipy.sparse as sp
 
 from .base import Recommender
 
-_EMPTY = {"", "-", "VARIOS", "VARIOS AUTORES", "AA.VV.", "AA. VV.", "ANÓNIMO", "ANONIMO"}
+_EMPTY = {"", "-", "VARIOS", "VARIOS AUTORES", "AA VV", "AAVV", "ANONIMO", "DESCONOCIDO"}
 
 
 class AttributeAffinity(Recommender):
@@ -67,6 +67,7 @@ class NewItemAffinity(Recommender):
 
     score(u, j) = w_autor * share_u(autor_j) + w_genero * share_u(genero_j)
                   + w_editorial * share_u(editorial_j) + w_prior * popularidad_reciente(autor_j)
+                  + w_alta * exp(-días desde el alta / 180)
 
     share_u(a) = fracción (con decaimiento temporal) de las lecturas de u con atributo a.
     El prior de autor ayuda a decidir entre novedades: un libro nuevo de un autor muy leído
@@ -76,10 +77,11 @@ class NewItemAffinity(Recommender):
     name = "novedades"
 
     def __init__(self, w_autor: float = 1.0, w_genero: float = 0.3, w_editorial: float = 0.1,
-                 w_prior: float = 0.2, **kw):
+                 w_prior: float = 0.2, w_alta: float = 0.0, **kw):
         super().__init__(**kw)
         self.w_autor, self.w_genero = w_autor, w_genero
         self.w_editorial, self.w_prior = w_editorial, w_prior
+        self.w_alta = w_alta
 
     def _fit(self) -> None:
         if self.books is None:
@@ -99,6 +101,12 @@ class NewItemAffinity(Recommender):
         aut_pop = A_aut.T @ self.popularity
         prior = A_aut[self.new_idx] @ aut_pop
         self.prior = (prior / (prior.max() + 1e-9)).astype(np.float32)
+        # recencia del alta en el sitio (dado de alta después del corte = 1; desconocido = 0)
+        self.alta_rec = np.zeros(self.new_idx.size, dtype=np.float32)
+        if self.w_alta and "fecha_alta" in meta:
+            alta = pd.DatetimeIndex(meta["fecha_alta"].to_numpy()[self.new_idx])
+            days = np.clip((self.ref_date - alta).days.to_numpy(float), 0, None)
+            self.alta_rec = np.nan_to_num(np.exp(-days / 180.0)).astype(np.float32)
 
     def _score(self, user_idx: np.ndarray) -> np.ndarray:
         out = np.full((len(user_idx), self.im.n_items), -1e6, dtype=np.float32)
@@ -109,6 +117,6 @@ class NewItemAffinity(Recommender):
         for w, A, A_new_T in self.parts:
             if w:
                 s += w * ((P @ A) @ A_new_T).toarray()
-        s += self.w_prior * self.prior[None, :]
+        s += self.w_prior * self.prior[None, :] + self.w_alta * self.alta_rec[None, :]
         out[:, self.new_idx] = s
         return out

@@ -21,7 +21,9 @@ competencia Kaggle **FCEN DM – Sistemas de Recomendación 2026** (Maestría en
    colaborativo puro no puede recomendarlas.
 3. **El catálogo tiene ~715 libros editados en 2025–2026 sin interacciones.** Los sumamos como candidatos
    (`--new-items`) y los recomendamos por afinidad de autor/género.
-4. Ya leído ≠ recomendable: se excluyen siempre los libros que el lector ya tiene en su historial.
+4. **La fecha de alta de cada libro está escondida en el nombre de la tapa** (`img_src`, timestamp
+   Unix). Los libros se leen ~38 días después del alta: es la señal más fuerte para novedades.
+5. Ya leído ≠ recomendable: se excluyen siempre los libros que el lector ya tiene en su historial.
 
 ## Arquitectura
 
@@ -46,6 +48,7 @@ src/sistrec/
   submission.py    escribe y valida el CSV
   registry.py      configuraciones de modelos por nombre
   series.py        detección de saga + tomo en los títulos
+  text.py          embeddings de título + resumen (TF-IDF + SVD)
   models/
     base.py          interfaz común (exclusión de vistos, cold start, top-K)
     popularity.py    popularidad (con decaimiento temporal opcional)
@@ -80,7 +83,7 @@ py -3.12 -m venv ~/.venvs/recsys-libros
 python scripts/validate.py --cutoff 2024-01-01 --models pop rp3beta itemknn autor --new-items
 
 # 4. Ranker de 2 etapas (mejor modelo): valida y genera submissions/<fecha>_ranker.csv
-python scripts/train_ranker.py            # ~15 min la primera vez; luego usa folds cacheados
+python scripts/train_ranker.py            # ~30 min la primera vez; luego usa folds cacheados
 python scripts/train_ranker.py --rebuild  # si cambiaste candidatos o features
 
 # 4b. Submission con un modelo individual
@@ -94,7 +97,8 @@ python -m pytest
 
 | Modelo | NDCG@20 (validación 2024) |
 |---|---|
-| **Ranker 2 etapas v3** (+ secuencial, sagas, 5 años) — **Kaggle público 0.12650** | **0.0907** |
+| **Ranker 2 etapas v4** (+ fecha de alta, texto, ediciones, cortes semestrales) | **0.1014** |
+| Ranker 2 etapas v3 (+ secuencial, sagas, 5 años) — Kaggle público 0.12650 | 0.0907 |
 | Ranker 2 etapas v1 (Kaggle público: 0.11658) | 0.0827 |
 | Afinidad autor + novedades | 0.0535 |
 | ItemKNN con decaimiento | 0.0525 |

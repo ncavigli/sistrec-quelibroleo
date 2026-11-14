@@ -42,14 +42,17 @@ def get_fold(df, books, readers, cutoff, end=None, users=None, rebuild=False) ->
     return fold
 
 
+SEMESTER_FOLDS = [f"{y}-{m}-01" for y in range(2019, 2023) for m in ("01", "07")] + ["2023-01-01"]
+
+
 def next_year(cutoff: str) -> str:
     return str((pd.Timestamp(cutoff) + pd.DateOffset(years=1)).date())
 
 
 def main() -> None:
     p = argparse.ArgumentParser()
-    p.add_argument("--train-folds", nargs="+",
-                   default=["2019-01-01", "2020-01-01", "2021-01-01", "2022-01-01", "2023-01-01"])
+    # cortes semestrales; cada fold etiqueta el año siguiente al corte (no puede pasar 2024-01-01)
+    p.add_argument("--train-folds", nargs="+", default=SEMESTER_FOLDS)
     p.add_argument("--valid-fold", default="2024-01-01")
     p.add_argument("--rebuild", action="store_true")
     p.add_argument("--no-submission", action="store_true")
